@@ -27,10 +27,14 @@ jobs:
           # 若 Install 仍卡住，可去掉 cache 避免缓存导致卡顿
           # cache: 'npm'
 
-      # 使用 npm install 避免 npm ci 对 optional deps 的 bug（如 @rollup/rollup-linux-x64-gnu）
       - name: Install dependencies
         run: npm install --no-audit
         timeout-minutes: 5
+
+      # 显式安装 Rollup 的 Linux 原生依赖，规避 npm optional deps 未安装的 bug
+      - name: Install Rollup native binding
+        run: npm install @rollup/rollup-linux-x64-gnu --no-save
+        timeout-minutes: 2
 
       - name: Build
         run: npm run build
